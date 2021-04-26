@@ -10,7 +10,7 @@ SWARM_SIZE = 20
 SWARM_MAX_SPEED = 6
 
 function setup()
-    viewer.mode = FULLSCREEN_NO_BUTTONS
+    viewer.mode = FULLSCREEN
     -- set player position
     sx,sy = WIDTH / 2, HEIGHT / 2
     -- tables
