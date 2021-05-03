@@ -24,7 +24,7 @@ function setup()
         table.insert(bugs, Bug(WIDTH, HEIGHT))
     end
     -- setup explosions
-    emitter = PEmitter(300, 300)
+    emitter = PEmitter(0,0)
     setExplosion()
 end
 
@@ -96,6 +96,7 @@ end
 
 function checkBulletCollisions()
     local i,b,a,c
+    -- check collisions
     for i, b in pairs(bugs) do
         for a, c in pairs(m) do
             local mLocRect = Rectangle(c.x, c.y, 5, 5)
@@ -112,6 +113,7 @@ function checkBulletCollisions()
             end)]]
         end
     end
+    -- draw explosions
     for j, e in pairs(explosions) do
         emitter.x = e.x
         emitter.y = e.y
