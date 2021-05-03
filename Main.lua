@@ -8,26 +8,31 @@
 
 SWARM_SIZE = 20
 SWARM_MAX_SPEED = 6
+EXPLOSION_DURATION = 30
 
 function setup()
-    viewer.mode = FULLSCREEN_NO_BUTTONS
+    viewer.mode = STANDARD --FULLSCREEN_NO_BUTTONS
     -- set player position
     sx,sy = WIDTH / 2, HEIGHT / 2
     -- tables
     j = {}
     m = {}
     bugs = {}
+    explosions = {}
     -- initialize swarm
     for i = 1, SWARM_SIZE, 1 do
         table.insert(bugs, Bug(WIDTH, HEIGHT))
     end
+    -- setup explosions
+    emitter = PEmitter(300, 300)
+    setExplosion()
 end
 
 function draw()
-    -- checks
-    checkBulletCollisions()
     -- background color
     background(89, 142, 35)
+    -- checks
+    checkBulletCollisions()
     -- joysticks    
     for a,b in pairs(j) do
         b:draw()
@@ -95,10 +100,10 @@ function checkBulletCollisions()
         for a, c in pairs(m) do
             local mLocRect = Rectangle(c.x, c.y, 5, 5)
             if b.locRect:intersects(mLocRect) then
+                sound(SOUND_EXPLODE, 1994)
                 table.remove(bugs, i)
                 table.remove(m, a)
-                sound(SOUND_PICKUP, 8648, 0.15) --coin sound
-                sound(SOUND_POWERUP, 8650, 0.08)--buzz
+                table.insert(explosions, vec3(b.locRect.x, b.locRect.y, EXPLOSION_DURATION))
             end
             -- uncomment if things are too easy
             --[[b.startled = true
@@ -107,6 +112,41 @@ function checkBulletCollisions()
             end)]]
         end
     end
+    for j, e in pairs(explosions) do
+        emitter.x = e.x
+        emitter.y = e.y
+        if e.z > 0 then
+            emitter:draw()
+            e.z = e.z - 1
+        else
+            table.remove(explosions, j)
+        end
+    end
+end
+
+function setExplosion()
+    emitter.emitterMesh.texture = asset.builtin.Tyrian_Remastered.Explosion_Huge
+    emitter.partPerSec = 35
+    emitter.sizeX = 0
+    emitter.sizeY = 0
+    emitter.life = 34
+    emitter.lifeVariation = 18
+    emitter.initPartSize = 43
+    emitter.partSizeVariation = 29
+    emitter.finalPartSize = -1
+    emitter.velocity = 3
+    emitter.velocityVariation = 35
+    emitter.rotSpd = 3
+    emitter.rotSpdVariation = 0
+    emitter.initOpacity = 193
+    emitter.opacityVariation = 8
+    emitter.finalOpacity = 83
+    emitter.windX = 0
+    emitter.airResistance = 1
+    emitter.gravity = 0
+    emitter.useGravityVector = false
+    emitter.sizeWiggle = 3
+    emitter.turbulencePosAffect = 4   
 end
 
 function touched(t)
