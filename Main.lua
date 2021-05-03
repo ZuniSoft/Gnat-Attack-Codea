@@ -11,7 +11,7 @@ SWARM_MAX_SPEED = 6
 EXPLOSION_DURATION = 30
 
 function setup()
-    viewer.mode = STANDARD --FULLSCREEN_NO_BUTTONS
+    viewer.mode = FULLSCREEN_NO_BUTTONS
     -- set player position
     sx,sy = WIDTH / 2, HEIGHT / 2
     -- tables
